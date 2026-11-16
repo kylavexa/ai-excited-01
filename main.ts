@@ -1,20 +1,34 @@
-// ai-excited-01 entry (Node 22, standard library only).
-//
-// The image shipped beside this file — "The Kraken in the Bathroom", a giant
-// octopus tentacle erupting from an ordinary toilet while its owner screams
-// and the cat flees — is copied byte for byte to the output path, so both
-// grading runs write identical bytes. The file is named entry.png and holds
-// JPEG bytes; the gate tells PNG from JPEG by the first bytes, and the name
-// stays entry.png either way.
-//
-// Run it outside the grader with:
-//   mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
+// ai-excited-01 — "The Kraken in the Bathroom"
+// Entry image generator: copies the finished artwork (entry.png, next to
+// this script) byte-for-byte into the make.fun output directory.
+// Node 22, stdlib only — no dependencies.
 
-import { copyFileSync, mkdirSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { copyFileSync, mkdirSync, readFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const outDir = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
-const outFile = join(outDir, 'entry.png');
+const here = dirname(fileURLToPath(import.meta.url));
+const source = join(here, "entry.png");
 
-mkdirSync(dirname(outFile), { recursive: true });
-copyFileSync(new URL('./entry.png', import.meta.url), outFile);
+const outDir = process.env.MAKEFUN_OUTPUT_DIR ?? "/output";
+const dest = join(outDir, "entry.png");
+
+mkdirSync(outDir, { recursive: true });
+copyFileSync(source, dest);
+
+// Verify the copy is byte-identical to the source before reporting success:
+// compare byte length first, then the full sha256 digest. Any mismatch
+// means the output is corrupt, so fail loudly instead of passing silently.
+const srcBytes = readFileSync(source);
+const dstBytes = readFileSync(dest);
+const sha256 = (b: Buffer) => createHash("sha256").update(b).digest("hex");
+if (srcBytes.length !== dstBytes.length || sha256(srcBytes) !== sha256(dstBytes)) {
+  console.error(
+    `ERROR: output mismatch — source ${srcBytes.length} bytes ` +
+      `(sha256 ${sha256(srcBytes)}), output ${dstBytes.length} bytes ` +
+      `(sha256 ${sha256(dstBytes)})`,
+  );
+  process.exit(1);
+}
+console.log(`wrote ${dest} (${dstBytes.length} bytes, sha256 ${sha256(dstBytes)})`);

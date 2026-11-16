@@ -1,37 +1,50 @@
-# ai-excited-01 — "The Kraken in the Bathroom"
+# The Kraken in the Bathroom
 
-One image made to get the AI judge excited, for make.fun's `ai-excited-01`
-competition.
+[![make.fun · ai-excited-01](https://make.fun/badge/ai-excited-01.svg)](https://make.fun/bounty/ai-excited-01?utm_source=github&utm_medium=readme&utm_campaign=ai-excited-01)
+[![rank](https://make.fun/badge/ai-excited-01/kylavexa/ai-excited-01/rank.svg)](https://make.fun/bounty/ai-excited-01/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=ai-excited-01)
+[![reward](https://make.fun/badge/ai-excited-01/kylavexa/ai-excited-01/reward.svg)](https://make.fun/bounty/ai-excited-01?utm_source=github&utm_medium=readme&utm_campaign=ai-excited-01)
+
+Entry for the [ai-excited-01 bounty](https://make.fun/bounty/ai-excited-01) on
+[make.fun](https://make.fun): an image that makes the viewer say "AI is
+exciting" — a single impossible moment, rendered photorealistically.
 
 ## The image
 
-A small, ordinary bathroom in warm morning light. Out of an ordinary white
-toilet bowl erupts a giant purple octopus tentacle, water exploding upward,
-curling high toward the ceiling as the single huge focal point. The man in
-the blue bathrobe screams and slips backward, arms flailing; a ginger cat
-leaps away mid-air; a roll of toilet paper unspools through the air.
+**"The Kraken in the Bathroom"** — one giant purple octopus tentacle bursts
+out of a white toilet in a small, ordinary bathroom. Water sprays upward as
+the tentacle curls high toward the ceiling, a single huge focal object in the
+middle of the frame. A man in a blue bathrobe screams and slips backward with
+his arms flailing, a ginger cat leaps away in front, and rolls of toilet paper
+fly through the air. Warm morning light comes through a small window.
+High-detail photorealism, dramatic diagonal composition. No text in the image.
 
-Why this scene: it follows the recipe of one impossible event in the middle
-of an everyday scene, with a visible human reaction, humour, photorealistic
-detail, warm cinematic light, and one strong focal object — the tentacle —
-that still reads clearly at ~300 px across.
+The joke lands at a glance and still holds up at 300 px: purple tentacle,
+screaming man, fleeing cat — all readable at thumbnail size.
 
-## The program
+## How it works
 
-`main.ts` (Node 22, standard library only) copies `entry.png` byte for byte
-to `$MAKEFUN_OUTPUT_DIR/entry.png` (or `/output/entry.png`), so both grading
-runs write identical bytes.
-
-`entry.png` is 1024×1024, 338,116 bytes (JPEG bytes under the `entry.png`
-name, which the gate allows), generated in this build session and resized
-from the 1600×1600 render with Lanczos.
-
-## Run it
+`main.ts` (Node 22, stdlib only, no dependencies) copies the finished artwork
+`entry.png` byte-for-byte into the make.fun output directory, then verifies
+the copy by comparing byte length and SHA-256 against the source — and exits
+non-zero with an error if they ever differ.
 
 ```sh
-mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
+# default output: /output/entry.png
+node main.ts
+
+# or point it anywhere:
+MAKEFUN_OUTPUT_DIR=./out node main.ts
 ```
+
+## Files
+
+| File | What it is |
+| --- | --- |
+| `main.ts` | Entry script — copies + verifies `entry.png` |
+| `entry.png` | The finished artwork (1024×1024 JPEG, 338 KB) |
+| `README.md` | This file |
+| `LICENSE` | MIT |
 
 ## License
 
-MIT — see `LICENSE`.
+MIT — see [LICENSE](LICENSE).
